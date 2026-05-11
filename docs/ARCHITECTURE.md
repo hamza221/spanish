@@ -12,8 +12,10 @@ client components that share the design tokens defined in
 | `/`                 | Shell             | Dashboard — stats, CTA, module list          |
 | `/flashcards`       | Immersive         | Phase 1 swipe deck + post-session summary    |
 | `/conversation`     | Shell → Immersive | Persona/scenario picker, then chat           |
+| `/writing`          | Shell             | Phase 2 writing coach editor + review        |
 | `/api/cards`        | API               | Returns the user's due cards (SM-2 filtered) |
 | `/api/conversation` | API               | One assistant turn + optional coach note     |
+| `/api/writing`      | API               | Structured grammar/style review of free text |
 
 Immersive routes (`/flashcards`, the chat phase of `/conversation`) hide the
 sidebar to match the design.
@@ -21,8 +23,11 @@ sidebar to match the design.
 ## State
 
 The current build is single-user and stores nothing server-side; session state
-(current card index, results, conversation history) lives in component state.
-Persistence is intentionally deferred:
+(current card index, results, conversation history, writing drafts) lives in
+component state. SRS reviews are the one exception: each swipe writes the
+updated SM-2 state for that card to `localStorage` via `src/lib/progress.ts`,
+so the schedule advances across page reloads. Persistence is otherwise
+intentionally deferred:
 
 - A Prisma + Postgres layer is sketched in [`docs/ROADMAP.md`](./ROADMAP.md).
 - The `/api/cards` route is the single read seam where SRS-aware data will
@@ -54,6 +59,12 @@ development friction-free and lets CI's `npm run build` succeed without
 secrets.
 
 See [`src/app/api/conversation/route.ts`](../src/app/api/conversation/route.ts).
+
+The Writing Coach (`/api/writing`) follows the same pattern: a single Claude
+call returns JSON `{summary, corrected, annotations[]}`, parsed by the pure
+helper in [`src/lib/writing-review.ts`](../src/lib/writing-review.ts) (covered
+by unit tests). When `ANTHROPIC_API_KEY` is unset, an offline reviewer flags a
+few canonical errors so the UI is still demoable.
 
 ## Speech
 

@@ -60,3 +60,27 @@ export interface SessionResult {
   learning: number;
   total: number;
 }
+
+export type CorrectionCategory = "grammar" | "vocabulary" | "style" | "spelling";
+
+export interface WritingAnnotation {
+  /** Substring of the original text that should be replaced. */
+  original: string;
+  /** Suggested replacement. Empty string means "delete". */
+  corrected: string;
+  /** Plain-language explanation of why the change is suggested. */
+  explanation: string;
+  /** Short label of the rule or category, e.g. "ser vs. estar". */
+  rule: string;
+  category: CorrectionCategory;
+}
+
+export type WritingMode = "beginner" | "advanced";
+
+export interface WritingReview {
+  annotations: WritingAnnotation[];
+  /** Full corrected version of the text, for the side-by-side view. */
+  corrected: string;
+  /** One-paragraph high-level feedback. */
+  summary: string;
+}

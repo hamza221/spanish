@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Flashcard, SessionResult } from "@/lib/types";
 import { speak } from "@/lib/speech";
+import { loadProgress, recordSwipe, saveProgress } from "@/lib/progress";
 import { FlashCard } from "./FlashCard";
 
 interface FlashcardSessionProps {
@@ -36,6 +37,11 @@ export function FlashcardSession({ cards, onExit, onComplete }: FlashcardSession
         learning: results.learning + (dir === "left" ? 1 : 0),
       };
       setResults(nextResults);
+      // Persist the SM-2 update for this card to localStorage.
+      if (current) {
+        const store = recordSwipe(loadProgress(), current.id, dir);
+        saveProgress(store);
+      }
       window.setTimeout(() => {
         if (index + 1 >= total) {
           onComplete({ ...nextResults, total });
@@ -47,7 +53,7 @@ export function FlashcardSession({ cards, onExit, onComplete }: FlashcardSession
         }
       }, 280);
     },
-    [swipingOut, results, index, total, onComplete],
+    [swipingOut, results, index, total, onComplete, current],
   );
 
   // Keyboard shortcuts: ← still-learning, → got-it, space/Enter flip, Esc exit.

@@ -16,7 +16,7 @@ const NAV: NavItem[] = [
   { href: "/flashcards", icon: "🃏", label: "Flashcards", badge: 24 },
   { href: "/conversation", icon: "💬", label: "Conversation" },
   { href: "/news", icon: "📰", label: "News reader", disabled: true },
-  { href: "/writing", icon: "✍️", label: "Writing coach", disabled: true },
+  { href: "/writing", icon: "✍️", label: "Writing coach" },
   { href: "/content", icon: "🎬", label: "From content", disabled: true },
 ];
 

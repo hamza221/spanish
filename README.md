@@ -1,11 +1,16 @@
 # Lumi — Spanish, daily.
 
 A modular web app for learning Spanish, built feature by feature. This repo currently
-implements two of the five planned phases from [`PLAN.md`](./PLAN.md):
+implements three of the five planned phases from [`PLAN.md`](./PLAN.md):
 
 - **Phase 1 — Flashcard Vocabulary System** — a Tinder-style swipe deck with
   frequency-ranked words, CEFR levels, example sentences, browser TTS audio,
-  and an SM-2 spaced-repetition core.
+  and an SM-2 spaced-repetition core. SRS state is persisted to
+  `localStorage` so reviews advance the schedule between sessions.
+- **Phase 2 — Writing Coach** — free-write Spanish, get inline corrections
+  with the rule explained for each one. Claude returns structured
+  `{summary, corrected, annotations}` JSON; the UI shows both an annotated
+  original and a side-by-side corrected version.
 - **Phase 5 — AI Conversation Partner with Personas** — pick a character
   (Lucía the Madrid barista, Diego the CDMX vendor, …) and a scenario (order
   coffee, ask for directions, …), then chat in Spanish with togglable
@@ -65,14 +70,18 @@ src/
 │   ├── page.tsx                 Dashboard route
 │   ├── flashcards/page.tsx      Phase 1 session
 │   ├── conversation/page.tsx    Phase 5 setup + chat
+│   ├── writing/page.tsx         Phase 2 writing coach
 │   └── api/
 │       ├── cards/route.ts       Returns due flashcards
-│       └── conversation/route.ts Claude-backed reply + coach pass
-├── components/                  React components (Sidebar, Dashboard, FlashCard, …)
+│       ├── conversation/route.ts Claude-backed reply + coach pass
+│       └── writing/route.ts     Claude-backed structured review
+├── components/                  React components (Sidebar, Dashboard, FlashCard, WritingCoach, …)
 ├── data/                        Seed personas, scenarios, flashcards
 └── lib/
     ├── srs.ts                   SM-2 spaced-repetition algorithm
-    ├── srs.test.ts              Vitest unit tests
+    ├── progress.ts              localStorage persistence for SRS state
+    ├── annotate.ts              Inline-correction segmenter
+    ├── writing-review.ts        Robust parser for the writing-coach JSON
     ├── speech.ts                Web Speech API helper
     ├── anthropic.ts             Anthropic SDK client
     └── types.ts                 Shared TypeScript types

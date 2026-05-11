@@ -8,6 +8,16 @@
   - Auto-speak via Web Speech API.
   - Session summary with mascot.
   - Pure-function SM-2 algorithm + unit tests in `src/lib/srs.ts`.
+  - **Local persistence** of SRS state via `localStorage` (`src/lib/progress.ts`).
+- **Phase 2 — Writing Coach** (`/writing`)
+  - Free-write textarea with three starter prompts.
+  - Beginner / Advanced modes.
+  - Claude returns structured `{summary, corrected, annotations}` JSON; the
+    UI renders the learner's original text with inline corrections and a
+    side-by-side corrected version.
+  - Per-annotation rule explanation list, click-to-highlight.
+  - Offline reviewer fallback flags common errors (mui → muy, soy → estoy
+    cansado, …) so the UI is still demoable without an API key.
 - **Phase 5 — AI Conversation Partner with Personas**
   - Persona + scenario picker (`/conversation`).
   - In-character chat with togglable translations and a coach pane.
@@ -19,7 +29,8 @@
 
 1. **Persistence & auth (cross-cutting)**
    - PostgreSQL + Prisma schema for users, flashcards (with SM-2 fields),
-     reviews, conversation transcripts.
+     reviews, conversation transcripts. The `localStorage`-backed
+     `progress.ts` is the seam this will replace.
    - NextAuth.js with Google + email magic-link providers.
    - Server actions for "mark known / learning / ignored".
 2. **Phase 1 enrichment**
@@ -28,10 +39,10 @@
    - Tatoeba example sentences.
    - Wiktionary definitions + part-of-speech.
    - Optional Forvo audio per word.
-3. **Phase 2 — Writing Coach**
-   - Free-write editor with inline annotations.
-   - Beginner/Advanced difficulty modes.
-   - Mistakes feed into the user's flashcard deck.
+3. **Phase 2 follow-ups**
+   - Auto-add flagged vocabulary to the flashcard deck.
+   - Tone selector (formal / informal / regional dialect).
+   - Daily writing prompt.
 4. **Phase 3 — Graded News Reader**
    - RSS ingestion (El País, BBC Mundo, El Universal).
    - AI rewrites at Beginner / Intermediate / Advanced.
