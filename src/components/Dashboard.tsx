@@ -160,7 +160,7 @@ export function Dashboard({ due, streak, xp }: DashboardProps) {
           </div>
         </div>
 
-        <div className="module-row locked">
+        <Link href="/writing" className="module-row">
           <div className="module-icon gold">✍️</div>
           <div>
             <h4 className="module-name">Writing Coach</h4>
@@ -169,9 +169,11 @@ export function Dashboard({ due, streak, xp }: DashboardProps) {
             </p>
           </div>
           <div className="module-meta">
-            <span>Coming soon</span>
+            Beginner / Advanced
+            <br />
+            <span style={{ color: "var(--primary-ink)" }}>Try it →</span>
           </div>
-        </div>
+        </Link>
 
         <div className="module-row locked">
           <div className="module-icon green">🎬</div>
